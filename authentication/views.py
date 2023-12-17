@@ -4,7 +4,10 @@ from django.views import View
 import json
 from django.http import JsonResponse
 from django.contrib.auth.models import User
-from validate_email import validate_email
+# from validate_email import validate_email
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
+
 from django.contrib import messages, auth
 from django.core.mail import EmailMessage, get_connection
 from django.utils.encoding import force_bytes, force_str
@@ -36,6 +39,19 @@ class UsernameValidationView(View):
         return JsonResponse({'username_valid': True})
 
 
+# from django.core.mail import EmailMessage, get_connection
+# from django.core.exceptions import IntegrityError
+# from django.contrib.sites.shortcuts import get_current_site
+# from django.contrib.auth.tokens import default_token_generator as account_activation_token
+# from django.contrib.auth.models import User
+# from django.contrib import messages
+# from django.shortcuts import render
+# from django.urls import reverse
+# from django.utils.http import urlsafe_base64_encode
+# from django.utils.encoding import force_bytes
+# from django.views import View
+
+
 class RegistrationView(View):
     def get(self, request):
         return render(request, 'authentication/register.html')
@@ -60,36 +76,15 @@ class RegistrationView(View):
 
         try:
             user = User.objects.create_user(username=username, email=email, password=password)
-            user.is_active = False
+            user.is_active = True  # User is active immediately after registration
             user.save()
 
-            current_site = get_current_site(request)
-            email_body = {
-                'user': user,
-                'domain': current_site.domain,
-                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                'token': account_activation_token.make_token(user),
-            }
-
-            link = reverse('activate', kwargs={'uidb64': email_body['uid'], 'token': email_body['token']})
-            activate_url = 'http://' + current_site.domain + link
-
-            email_subject = 'Activate your account'
-            email_body_text = f'Hi {user.username}, Please click the link below to activate your account:\n{activate_url}'
-
-            email = EmailMessage(email_subject, email_body_text, 'noreply@semycolon.com', [email])
-
-            connection = get_connection()
-            email.connection = connection
-            email.send(fail_silently=False)
-
-            messages.success(request, 'Account successfully created. Check your email to activate your account.')
+            messages.success(request, 'Account successfully created.')
             return render(request, 'authentication/register.html')
         except IntegrityError:
             # Integrity error for a username already in use
             messages.error(request, 'Username already taken. Please choose another username.')
             return render(request, 'authentication/register.html', context)
-
 
 class VerificationView(View):
     def get(self, request, uidb64, token):
