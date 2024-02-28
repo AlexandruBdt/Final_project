@@ -6,18 +6,19 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-    <title>TrulyExpenses {% block title %} {% endblock %}</title>
+    <title>MyBudget {% block title %} {% endblock %}</title>
     <!-- Bootstrap core CSS -->
-    <link href="{% static 'css/bootstrap.min.css'%}" rel="stylesheet" />
-    <link href="{% static 'css/main.css'%}" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css'%}" >
+    <link rel="stylesheet"  href="{% static 'css/main.css'%}">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
 
     <!-- Custom styles for this template -->
-    <link href="{% static 'css/dashboard.css' %}" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}" >
   </head>
   <body>
+    <br>
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">TrulyExpenses</a>
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">MyBudget</a>
 
       <ul
         class="navbar-nav px-3"
@@ -28,17 +29,16 @@
             ({{request.user.username}})
           </span>
         </li>
-
-{#        <li class="nav-item text-nowrap mt-3 ml-2">#}
-{#          <form action="{% url  'logout' %}" method="POST">#}
-{#            {% csrf_token %}#}
-{#            <input#}
-{#              class="text text-capitalize"#}
-{#              type="submit"#}
-{#              value="Sign out"#}
-{#            />#}
-{#          </form>#}
-{#        </li>#}
+        <li class="nav-item text-nowrap mt-3 ml-2">
+          <form action="{% url  'logout' %}" method="POST">
+            {% csrf_token %}
+            <input
+              class="text text-capitalize"
+              type="submit"
+              value="Sign out"
+            />
+          </form>
+        </li>
       </ul>
     </nav>
 

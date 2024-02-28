@@ -16,6 +16,7 @@
         </div>
         <form action="{% url 'register' %}" method="post">
           {% csrf_token %}
+
           {% include 'partials/_messages.html' %}
           <div class="form-group">
             <input
@@ -37,6 +38,7 @@
               placeholder="Email"
               class="form-control form-control-sm"
               id="emailField"
+
               value="{{fieldValues.email}}"
             />
           </div>
@@ -57,7 +59,9 @@
         </form>
 
       </div>
-
+        <div class="container">
+            <span>Have an account? </span><a href="{% url 'login' %}">Login</a>
+        </div>
       </div>
     </div>
   </div>

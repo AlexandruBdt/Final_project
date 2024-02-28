@@ -4,18 +4,11 @@ from django.views import View
 import json
 from django.http import JsonResponse
 from django.contrib.auth.models import User
-# from validate_email import validate_email
 from django.core.validators import validate_email
-from django.core.exceptions import ValidationError
-
 from django.contrib import messages, auth
-from django.core.mail import EmailMessage, get_connection
-from django.utils.encoding import force_bytes, force_str
-from django.contrib.sites.shortcuts import get_current_site
-from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.utils.encoding import force_str
+from django.utils.http import urlsafe_base64_decode
 from .utils import account_activation_token
-from django.urls import reverse
-
 
 class EmailValidationView(View):
     def post(self, request):
@@ -37,19 +30,6 @@ class UsernameValidationView(View):
         if User.objects.filter(username=username).exists():
             return JsonResponse({'username_error': 'sorry username in use,choose another one '}, status=409)
         return JsonResponse({'username_valid': True})
-
-
-# from django.core.mail import EmailMessage, get_connection
-# from django.core.exceptions import IntegrityError
-# from django.contrib.sites.shortcuts import get_current_site
-# from django.contrib.auth.tokens import default_token_generator as account_activation_token
-# from django.contrib.auth.models import User
-# from django.contrib import messages
-# from django.shortcuts import render
-# from django.urls import reverse
-# from django.utils.http import urlsafe_base64_encode
-# from django.utils.encoding import force_bytes
-# from django.views import View
 
 
 class RegistrationView(View):
@@ -122,9 +102,17 @@ class LoginView(View):
             if user:
                 if user.is_active:
                     auth.login(request, user)
-                    messages.success(request, 'Welcome',
-                                     ' +user.username+', ' you are now logged in')
-                messages.error(request, 'Account is not active, please check your email')
-                return render(request, 'authentication/login.html')
-            messages.error(request, 'Invalid credentials, try again')
-            return render(request, 'authentication/login.html')
+                    messages.success(request, f'Welcome {user.username}, you are now logged in')
+                    return redirect('expenses')
+            else:
+                messages.error(request, 'Invalid credentials, try again')
+        else:
+            messages.error(request, 'Please fill all fields')
+
+        return render(request, 'authentication/login.html')
+
+class LogoutView(View):
+    def post(self, request):
+        auth.logout(request)
+        messages.success(request, 'You have been logged out')
+        return redirect('login')

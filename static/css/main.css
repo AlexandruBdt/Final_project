@@ -1,3 +1,4 @@
+
 .bd-placeholder-img {
   font-size: 1.125rem;
   text-anchor: middle;
@@ -5,6 +6,7 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  transition: transform 0.3s ease;
 }
 
 @media (min-width: 768px) {
@@ -15,9 +17,9 @@
 
 .showPasswordToggle {
   cursor: pointer;
-  transition: all;
+  transition: transform 0.3s ease;
 }
 
 .showPasswordToggle:hover {
-  transform: scale(1.2);
+  transform: scale(1.1);
 }
